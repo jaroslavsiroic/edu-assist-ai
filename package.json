@@ -4,7 +4,7 @@
   "description": "AI assistant helping you to learn to code",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.115.0"
+    "vscode": "^1.113.0"
   },
   "categories": [
     "Other"
@@ -19,43 +19,65 @@
           "type": "string",
           "enum": [
             "Lithuanian",
-            "English"
+            "English",
+            "Polish"
           ],
           "default": "Lithuanian",
           "description": "The language Neko AI will use to speak to you."
+        },
+        "neko-ai.aiProvider": {
+          "type": "string",
+          "enum": [
+            "Ollama",
+            "Google AI Studio"
+          ],
+          "default": "Ollama",
+          "description": "The AI provider you want to use."
+        },
+        "neko-ai.googleApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Your Google AI Studio API key.",
+          "secret": true
+        },
+        "neko-ai.googleModel": {
+          "type": "string",
+          "default": "gemini-2.5-flash",
+          "description": "The Google AI Studio model to use (e.g. gemini-2.5-flash or gemini-2.0-flash)."
+        },
+        "neko-ai.debugMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable debug logging in the Neko AI webview window."
         }
       }
     },
     "commands": [
       {
-        "command": "neko-ai.explain",
-        "title": "NekoAI: Explain Code"
+        "command": "neko-ai.explainTask",
+        "title": "NekoAI: Explain the Task"
       },
       {
-        "command": "neko-ai.fix",
-        "title": "NekoAI: Fix Code"
+        "command": "neko-ai.showExample",
+        "title": "NekoAI: Show me an Example"
       },
       {
-        "command": "neko-ai.improve",
-        "title": "NekoAI: Improve Code"
+        "command": "neko-ai.explainError",
+        "title": "NekoAI: Explain Error"
+      },
+      {
+        "command": "neko-ai.explainCode",
+        "title": "NekoAI: Explain my Code"
       },
       {
         "command": "neko-ai.open",
         "title": "NekoAI: Open Panel"
-      },
-      {
-        "command": "neko-ai.runPython",
-        "title": "NekoAI: Run Python"
       }
     ],
     "menus": {
       "editor/context": [
         {
-          "command": "neko-ai.fix",
-          "when": "editorHasSelection"
-        },
-        {
-          "command": "neko-ai.explain",
+          "command": "neko-ai.explainCode",
           "when": "editorHasSelection"
         }
       ]

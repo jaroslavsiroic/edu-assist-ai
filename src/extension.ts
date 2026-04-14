@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { NekoPanel } from "./webview";
-import { handleAI, runPython } from "./commands";
+import { handleAI, runPython, resetLadders } from "./commands";
 
 export function activate(context: vscode.ExtensionContext) {
   // Register all commands
@@ -9,22 +9,27 @@ export function activate(context: vscode.ExtensionContext) {
       NekoPanel.show();
       setupPanelMessageListener();
     }),
-    vscode.commands.registerCommand("neko-ai.fix", () => handleAI("fix")),
-    vscode.commands.registerCommand("neko-ai.explain", () => handleAI("explain")),
-    vscode.commands.registerCommand("neko-ai.improve", () => handleAI("improve")),
-    vscode.commands.registerCommand("neko-ai.runPython", runPython)
+    vscode.commands.registerCommand("neko-ai.explainTask", () => handleAI("explainTask")),
+    vscode.commands.registerCommand("neko-ai.showExample", () => handleAI("showExample")),
+    vscode.commands.registerCommand("neko-ai.explainError", () => handleAI("explainError")),
+    vscode.commands.registerCommand("neko-ai.explainCode", () => handleAI("explainCode"))
+  );
+
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeTextDocument(event => {
+      // Only reset if an actual active code editor changed (prevent noise)
+      if (vscode.window.activeTextEditor && event.document === vscode.window.activeTextEditor.document) {
+        resetLadders();
+      }
+    })
   );
 }
 
 function setupPanelMessageListener() {
   if (NekoPanel.currentPanel) {
     NekoPanel.currentPanel.onMessageCallback = (msg) => {
-      if (msg.command === "run") {
-        runPython();
-      } else {
-        // explain, improve, fix
-        handleAI(msg.command);
-      }
+      // route new buttons
+      handleAI(msg.command, msg.task);
     };
   }
 }
